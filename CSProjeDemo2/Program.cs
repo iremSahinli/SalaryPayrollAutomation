@@ -79,38 +79,39 @@ static void DegreeControl(Employee employee)
         int degree;
         while (true)
         {
-            Console.Write("Memurun derecesini giriniz: ");
-            if (int.TryParse(Console.ReadLine(), out degree))
+            Console.Write("Personelin derecesini giriniz (1 ve üzeri olmalıdır): ");
+            string input = Console.ReadLine()?.Trim();
+
+            if (!string.IsNullOrEmpty(input) && int.TryParse(input, out degree) && degree > 0)
             {
                 officer.Degree = degree;
                 break;
             }
-            Console.WriteLine("Geçersiz giriş, tekrar deneyin!");
+            Console.WriteLine("Geçersiz giriş! Personel derecesi 1 veya daha büyük tam sayılar şeklinde girilmelidir!");
         }
     }
 }
-
-static void PrintPayrollFiles(string outputDirectory)
-{
-    if (Directory.Exists(outputDirectory))
+    static void PrintPayrollFiles(string outputDirectory)
     {
-        string[] jsonFiles = Directory.GetFiles(outputDirectory, "*.json", SearchOption.AllDirectories);
-        if (jsonFiles.Length == 0)
+        if (Directory.Exists(outputDirectory))
         {
-            Console.WriteLine("Bordro klasörü boş veya veri yok!");
+            string[] jsonFiles = Directory.GetFiles(outputDirectory, "*.json", SearchOption.AllDirectories);
+            if (jsonFiles.Length == 0)
+            {
+                Console.WriteLine("Bordro klasörü boş veya veri yok!");
+            }
+            else
+            {
+                foreach (var file in jsonFiles)
+                {
+                    Console.WriteLine(new string('*', 50));
+                    string jsonContent = File.ReadAllText(file);
+                    Console.WriteLine(jsonContent);
+                }
+            }
         }
         else
         {
-            foreach (var file in jsonFiles)
-            {
-                Console.WriteLine(new string('*', 50));
-                string jsonContent = File.ReadAllText(file);
-                Console.WriteLine(jsonContent);
-            }
+            Console.WriteLine("Klasör bulunamadı!");
         }
     }
-    else
-    {
-        Console.WriteLine("Klasör bulunamadı!");
-    }
-}
